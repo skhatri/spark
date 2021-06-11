@@ -34,6 +34,10 @@ fetch() {
   fi;
 }
 
+extra_libs() {
+  curl -sL -o ${SPARK_HOME}/jars/delta-core_2.12-1.0.0.jar https://repo1.maven.org/maven2/io/delta/delta-core_2.12/1.0.0/delta-core_2.12-1.0.0.jar
+}
+
 fetch
 
 tar zxf ${WORKDIR}/${bin_file} -C ${WORKDIR}
@@ -42,6 +46,9 @@ if [[ ! -d ${SPARK_HOME} ]]; then
   echo "spark home ${SPARK_HOME} expected. it is not present."
   exit 1;
 fi;
+
+extra_libs
+
 export SPARK_VERSION=${version}
 
 cat $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile | sed "s/FROM openjdk/FROM ${REPO_BASE}\/openjdk/" > ${SPARK_HOME}/kubernetes/dockerfiles/spark/Dockerfile_tmp
